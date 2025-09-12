@@ -26,7 +26,7 @@ todo\_api/
 
 ````
 
----
+
 
 ## ⚙️ Setup & Installation
 
@@ -34,9 +34,9 @@ todo\_api/
    ```bash
    git clone <your-repo-url>
    cd todo_api
-````
 
-2. Create virtual environment
+
+2. **Create virtual environment**
 
    ```bash
    python -m venv venv
