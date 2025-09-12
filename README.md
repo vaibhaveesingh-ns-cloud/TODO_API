@@ -1,5 +1,3 @@
-
-```markdown
 # 📝 Todo API (FastAPI)
 
 A simple **Todo API** built with [FastAPI](https://fastapi.tiangolo.com/).  
