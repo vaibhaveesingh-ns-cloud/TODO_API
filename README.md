@@ -36,7 +36,7 @@ todo\_api/
    cd todo_api
 ````
 
-2. **Create virtual environment**
+2. Create virtual environment
 
    ```bash
    python -m venv venv
