@@ -183,7 +183,4 @@ Developed with ❤️ using FastAPI.
 
 ```
 
----
 
-Would you like me to also add **ready-made sample requests** in Swagger (using Pydantic `example` fields), so that when someone opens `/docs`, the request body is already pre-filled for easier testing?
-```
