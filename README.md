@@ -181,6 +181,5 @@ GET http://127.0.0.1:8000/todos/1 completed_in=0.98ms status=404
 
 Developed with ❤️ using FastAPI.
 
-```
 
 
