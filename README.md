@@ -180,5 +180,23 @@ GET http://127.0.0.1:8000/todos/1 completed_in=0.98ms status=404
 
 Developed with ❤️ using FastAPI.
 
+# Navigate to your project directory
+cd /Users/vaibhavee/project/TODO_fastapi
 
+# Open the database with sqlite3
+sqlite3 todo_multiuser.db
+
+# List all tables
+.tables
+
+# View all users
+SELECT * FROM users;
+
+# View users with formatted output
+.mode column
+.headers on
+SELECT id, username, email, is_active, is_admin, created_at FROM users;
+
+# Exit sqlite3
+.quit
 
