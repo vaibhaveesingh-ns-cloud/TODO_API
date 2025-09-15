@@ -55,7 +55,6 @@ todo\_api/
    ```bash
    uvicorn main:app --reload
    ```
-
 ---
 
 ## 📖 API Documentation
