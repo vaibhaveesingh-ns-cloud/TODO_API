@@ -4,3 +4,11 @@ pydantic
 pydantic-core
 passlib[bcrypt]
 python-jose[cryptography]
+sqlalchemy 
+alembic 
+email-validator 
+pydantic[email] 
+python-multipart
+slowapi 
+redis 
+aioredis
