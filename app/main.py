@@ -8,15 +8,24 @@ Base.metadata.create_all(bind=engine)  # create tables for demo; use Alembic for
 
 app = FastAPI(title="TaskMaster API", description="A collaborative todo application", version="1.0.0")
 
-# CORS middleware for local development
+# CORS middleware for development and production
+import os
+origins = [
+    "http://localhost:3000",
+    "http://localhost:3001", 
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001"
+]
+
+# Add production frontend URL if provided
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    origins.append(frontend_url)
+    origins.append(frontend_url.replace("http://", "https://"))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:3001"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
