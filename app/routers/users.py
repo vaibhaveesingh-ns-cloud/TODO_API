@@ -41,3 +41,8 @@ def login_for_token(form_data: auth.OAuth2PasswordRequestForm = Depends(), db: S
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email not verified")
     access_token = auth.create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/me", response_model=models.UserOut)
+def get_current_user_info(current_user: models.User = Depends(auth.get_current_user)):
+    """Get current authenticated user information"""
+    return current_user

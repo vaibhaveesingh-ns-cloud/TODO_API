@@ -1,66 +1,49 @@
 #!/usr/bin/env python3
 """
-Generate verification tokens for existing users
+Generate email verification tokens for testing purposes
 """
-from app.database import SessionLocal
-from app.models import User
-from app import email_utils
 
-def generate_token_for_user(username: str):
-    """Generate verification token for a specific user"""
-    db = SessionLocal()
-    try:
-        user = db.query(User).filter(User.username == username).first()
-        if not user:
-            print(f"User '{username}' not found!")
-            return None
-        
-        # Generate verification token
-        token = email_utils.generate_verification_token(user.email)
-        verification_link = f"http://127.0.0.1:8000/auth/verify-email?token={token}"
-        
-        print(f"=== Verification Token for {username} ===")
-        print(f"Email: {user.email}")
-        print(f"Token: {token}")
-        print(f"Full URL: {verification_link}")
-        print(f"Status: {'Already Active' if user.is_active else 'Needs Verification'}")
-        
-        return token
-    finally:
-        db.close()
+from itsdangerous import URLSafeTimedSerializer
 
-def list_users_and_generate_tokens():
-    """List all users and generate tokens for inactive ones"""
-    db = SessionLocal()
+# Same secret as in email_utils.py
+SECRET = "EMAIL_CHANGE_ME"
+s = URLSafeTimedSerializer(SECRET)
+
+def generate_token_for_email(email: str):
+    """Generate verification token for given email"""
+    token = s.dumps(email, salt="email-confirm")
+    return token
+
+def verify_token(token: str):
+    """Verify and decode a token"""
     try:
-        users = db.query(User).all()
-        print("=== All Users and Their Verification Links ===\n")
-        
-        for user in users:
-            token = email_utils.generate_verification_token(user.email)
-            verification_link = f"http://127.0.0.1:8000/auth/verify-email?token={token}"
-            
-            print(f"Username: {user.username}")
-            print(f"Email: {user.email}")
-            print(f"Active: {user.is_active}")
-            print(f"Verification URL: {verification_link}")
-            print("-" * 60)
-        
-        return users
-    finally:
-        db.close()
+        email = s.loads(token, salt="email-confirm", max_age=3600)
+        return email
+    except Exception as e:
+        return f"Invalid token: {e}"
 
 if __name__ == "__main__":
-    print("=== Email Verification Token Generator ===\n")
+    import sys
     
-    # List all users and their tokens
-    users = list_users_and_generate_tokens()
+    if len(sys.argv) < 2:
+        print("Usage:")
+        print("  Generate token: python generate_verification_token.py generate test@example.com")
+        print("  Verify token:   python generate_verification_token.py verify TOKEN_HERE")
+        sys.exit(1)
     
-    if users:
-        print(f"\n=== Instructions ===")
-        print("1. Copy any verification URL above")
-        print("2. Paste it in your browser or Postman (GET request)")
-        print("3. The user will be activated after successful verification")
-        print("4. You can then use the activated user to login and get access tokens")
+    action = sys.argv[1]
+    
+    if action == "generate" and len(sys.argv) >= 3:
+        email = sys.argv[2]
+        token = generate_token_for_email(email)
+        print(f"Email: {email}")
+        print(f"Token: {token}")
+        print(f"Verification URL: http://localhost:8000/auth/verify-email?token={token}")
+    
+    elif action == "verify" and len(sys.argv) >= 3:
+        token = sys.argv[2]
+        result = verify_token(token)
+        print(f"Token verification result: {result}")
+    
     else:
-        print("No users found. Register a user first using POST /auth/register")
+        print("Invalid arguments. Use 'generate EMAIL' or 'verify TOKEN'")

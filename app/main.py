@@ -8,10 +8,17 @@ Base.metadata.create_all(bind=engine)  # create tables for demo; use Alembic for
 
 app = FastAPI(title="TaskMaster API", description="A collaborative todo application", version="1.0.0")
 
-# CORS middleware for React frontend
+# CORS middleware for containerized deployment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # React dev server
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000", 
+        "http://localhost:80",
+        "http://localhost",
+        "http://frontend:80",
+        "http://nginx:80"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
