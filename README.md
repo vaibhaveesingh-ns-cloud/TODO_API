@@ -1,202 +1,289 @@
-# 📝 Todo API (FastAPI)
+# TaskMaster - Full-Stack Todo Application
 
-A simple **Todo API** built with [FastAPI](https://fastapi.tiangolo.com/).  
-It supports **full CRUD operations**, **input validation with Pydantic**, **auto-generated documentation**, and a **logging middleware**.
+A modern, collaborative todo application built with **React** frontend and **FastAPI** backend. TaskMaster helps teams organize their work with beautiful UI, real-time collaboration, and powerful task management features.
 
----
+![TaskMaster](https://img.shields.io/badge/TaskMaster-Full--Stack-blue)
+![React](https://img.shields.io/badge/React-18-61dafb)
+![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688)
+![Python](https://img.shields.io/badge/Python-3.11+-3776ab)
 
 ## 🚀 Features
-- Create, Read, Update, and Delete Todos
-- Input validation using **Pydantic models**
-- Auto-generated **Swagger** and **ReDoc** documentation
-- Basic middleware for request logging
-- In-memory "database" (dictionary) for simplicity
 
----
+### Frontend (React)
+- **Modern UI/UX**: Clean, professional design with responsive layout
+- **Authentication**: Secure login, registration, and email verification
+- **Task Management**: Create, edit, delete, and organize todos
+- **Real-time Search**: Find tasks instantly with search and filtering
+- **Statistics Dashboard**: Track productivity with visual metrics
+- **Protected Routes**: Secure navigation with authentication guards
 
-## 📂 Project Structure
+### Backend (FastAPI)
+- **RESTful API**: Clean, documented API endpoints
+- **JWT Authentication**: Secure token-based authentication
+- **Email Verification**: User account activation via email
+- **Database Integration**: SQLAlchemy ORM with SQLite
+- **Admin Panel**: User management and administrative functions
+- **CORS Support**: Cross-origin requests for React frontend
+
+## 🏗️ Architecture
+
+```
+TaskMaster/
+├── frontend/                 # React application
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   ├── contexts/        # React contexts
+│   │   ├── services/        # API service layer
+│   │   └── ...
+│   └── package.json
+├── app/                     # FastAPI application
+│   ├── routers/            # API route handlers
+│   ├── models.py           # Database models
+│   ├── auth.py             # Authentication logic
+│   ├── crud.py             # Database operations
+│   └── main.py             # FastAPI app entry point
+├── requirements.txt        # Python dependencies
+└── README.md              # This file
 ```
 
-todo\_api/
-│── main.py          # Entry point (FastAPI app + routes)
-│── models.py        # Pydantic models for validation
-│── database.py      # Simulated in-memory database
-│── middleware.py    # Request logging middleware
-│── README.md        # Project documentation
+## 🛠️ Tech Stack
 
-````
+### Frontend
+- **React 18** - Modern React with hooks
+- **React Router v6** - Client-side routing
+- **Axios** - HTTP client
+- **Lucide React** - Beautiful icons
+- **Custom CSS** - Utility-first styling
 
+### Backend
+- **FastAPI** - Modern Python web framework
+- **SQLAlchemy** - SQL toolkit and ORM
+- **SQLite** - Database (easily replaceable)
+- **JWT** - JSON Web Tokens for authentication
+- **Pydantic** - Data validation
+- **Passlib** - Password hashing
+- **python-jose** - JWT handling
 
+## 🚀 Quick Start
 
-## ⚙️ Setup & Installation
+### Prerequisites
+- **Python 3.11+** with pip
+- **Node.js 16+** with npm
+- **Git** for version control
 
-1. **Clone repo & enter project**
+### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd TODO_fastapi
+```
+
+### 2. Setup Backend (FastAPI)
+
+1. **Create virtual environment:**
    ```bash
-   git clone <your-repo-url>
-   cd todo_api
-
-
-2. **Create virtual environment**
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # Mac/Linux
-   venv\Scripts\activate      # Windows
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-3. **Install dependencies**
-
+2. **Install dependencies:**
    ```bash
-   pip install fastapi uvicorn pydantic
+   pip install -r requirements.txt
    ```
 
-4. **Run server**
-
+3. **Start the backend server:**
    ```bash
-   uvicorn main:app --reload
+   uvicorn app.main:app --reload
    ```
----
 
-## 📖 API Documentation
+   The API will be available at `http://localhost:8000`
+   - API Documentation: `http://localhost:8000/docs`
+   - Alternative docs: `http://localhost:8000/redoc`
 
-* Swagger UI 👉 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-* ReDoc 👉 [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+### 3. Setup Frontend (React)
 
-FastAPI auto-generates these docs from routes & Pydantic models.
+1. **Navigate to frontend directory:**
+   ```bash
+   cd frontend
+   ```
 
----
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-## 🔑 Endpoints
+3. **Start the development server:**
+   ```bash
+   npm start
+   ```
 
-| Method | Endpoint      | Description       |
-| ------ | ------------- | ----------------- |
-| POST   | `/todos/`     | Create a new todo |
-| GET    | `/todos/`     | List all todos    |
-| GET    | `/todos/{id}` | Get a todo by ID  |
-| PUT    | `/todos/{id}` | Update a todo     |
-| DELETE | `/todos/{id}` | Delete a todo     |
+   The React app will be available at `http://localhost:3000`
 
----
+## 📚 API Documentation
 
-## 🧪 How to Test Functionality
+### Authentication Endpoints
+- `POST /auth/register` - Register new user
+- `POST /auth/token` - Login and get access token
+- `GET /auth/verify-email` - Verify email address
 
-### 1. CRUD Operations
+### Todo Endpoints
+- `GET /todos/` - List user's todos
+- `POST /todos/` - Create new todo
+- `GET /todos/{id}` - Get specific todo
+- `PUT /todos/{id}` - Update todo
+- `DELETE /todos/{id}` - Delete todo
 
-#### Create a Todo
+### Admin Endpoints
+- `GET /admin/users` - List all users (admin only)
+- `POST /admin/users/{id}/promote` - Promote user to admin
+- `DELETE /admin/users/{id}` - Delete user
 
+## 🔧 Development Tools
+
+The project includes several utility scripts:
+
+- `check_users.py` - View database users and statistics
+- `debug_auth.py` - Debug authentication issues
+- `generate_verification_token.py` - Generate email verification tokens
+
+### Running Development Tools
 ```bash
-curl -X POST "http://127.0.0.1:8000/todos/" \
--H "Content-Type: application/json" \
--d '{"title": "Learn FastAPI", "description": "Build CRUD API", "completed": false}'
+# Check database and list users
+python check_users.py
+
+# Debug authentication
+python debug_auth.py
+
+# Generate verification tokens
+python generate_verification_token.py
 ```
 
-#### Get All Todos
+## 🗄️ Database
 
+The application uses SQLite by default with the following models:
+
+### User Model
+- `id` - Primary key
+- `username` - Unique username
+- `email` - Unique email address
+- `hashed_password` - Bcrypt hashed password
+- `is_active` - Email verification status
+- `is_admin` - Admin privileges flag
+- `created_at` - Account creation timestamp
+
+### Todo Model
+- `id` - Primary key
+- `title` - Task title
+- `description` - Task description (optional)
+- `completed` - Completion status
+- `owner_id` - Foreign key to User
+- `created_at` - Task creation timestamp
+
+## 🔐 Authentication Flow
+
+1. **User Registration**
+   - User submits registration form
+   - Account created with `is_active=False`
+   - Verification email sent (console output in development)
+
+2. **Email Verification**
+   - User clicks verification link
+   - Token validated and account activated
+   - User can now login
+
+3. **Login Process**
+   - User submits credentials
+   - JWT token generated and returned
+   - Token stored in localStorage (frontend)
+
+4. **Authenticated Requests**
+   - Token included in Authorization header
+   - Backend validates token on protected routes
+   - Auto-logout on token expiration
+
+## 🎨 UI/UX Design
+
+The frontend follows modern design principles:
+
+- **Clean Interface**: Minimal, distraction-free design
+- **Responsive Layout**: Works on desktop, tablet, and mobile
+- **Intuitive Navigation**: Clear user flows and interactions
+- **Visual Feedback**: Loading states, success/error messages
+- **Accessibility**: Semantic HTML and keyboard navigation
+
+## 🚀 Deployment
+
+### Backend Deployment
+1. Update database URL for production
+2. Set secure JWT secret key
+3. Configure email service (SMTP/SendGrid)
+4. Deploy to cloud platform (AWS, Heroku, DigitalOcean)
+
+### Frontend Deployment
+1. Build production bundle: `npm run build`
+2. Deploy to static hosting (Netlify, Vercel, S3)
+3. Update API base URL for production
+
+## 🧪 Testing
+
+### Backend Testing
 ```bash
-curl -X GET "http://127.0.0.1:8000/todos/"
+# Run with pytest (when tests are added)
+pytest
 ```
 
-#### Get Todo by ID
-
+### Frontend Testing
 ```bash
-curl -X GET "http://127.0.0.1:8000/todos/1"
+cd frontend
+npm test
 ```
 
-#### Update Todo
+## 🤝 Contributing
 
-```bash
-curl -X PUT "http://127.0.0.1:8000/todos/1" \
--H "Content-Type: application/json" \
--d '{"title": "Learn FastAPI Updated", "completed": true}'
-```
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes and commit: `git commit -m 'Add feature'`
+4. Push to the branch: `git push origin feature-name`
+5. Submit a pull request
 
-#### Delete Todo
+### Development Guidelines
+- Follow existing code style and patterns
+- Add proper error handling and validation
+- Include appropriate comments and documentation
+- Test authentication flows thoroughly
+- Ensure responsive design for frontend changes
 
-```bash
-curl -X DELETE "http://127.0.0.1:8000/todos/1"
-```
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+1. **CORS Errors**
+   - Ensure backend CORS is configured for frontend URL
+   - Check that both servers are running
+
+2. **Authentication Issues**
+   - Verify email before attempting login
+   - Check JWT token expiration
+   - Clear localStorage if needed
+
+3. **Database Issues**
+   - Database is created automatically on first run
+   - Use debug scripts to inspect database state
+
+4. **Email Verification**
+   - Check console output for verification links in development
+   - Configure proper email service for production
+
+### Getting Help
+
+- Check the API documentation at `/docs`
+- Use browser dev tools for frontend debugging
+- Check server logs for backend issues
+- Run the included debug scripts
 
 ---
 
-### 2. Input Validation (Pydantic)
-
-Try sending **invalid data**:
-
-* Title too short:
-
-```json
-{"title": "Hi"}
-```
-
-❌ Response → `422 Unprocessable Entity`
-
-* Wrong type for `completed`:
-
-```json
-{"title": "Test", "completed": "yes"}
-```
-
-❌ Response → Validation error: `"value could not be parsed to a boolean"`
-
----
-
-### 3. Auto-Generated Documentation
-
-* Go to 👉 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-* Try endpoints directly in Swagger UI
-* See models, request/response schemas, and error responses
-
----
-
-### 4. Middleware Logging
-
-Every request logs in terminal:
-
-```
-GET http://127.0.0.1:8000/todos/ completed_in=1.23ms status=200
-POST http://127.0.0.1:8000/todos/ completed_in=3.45ms status=201
-GET http://127.0.0.1:8000/todos/1 completed_in=0.98ms status=404
-```
-
----
-
-## ✅ Next Steps
-
-* Replace in-memory DB with **SQLite + SQLAlchemy** for persistence
-* Add authentication (JWT or OAuth2)
-* Add unit tests with `pytest`
-
----
-
-## 📌 Tech Stack
-
-* [FastAPI](https://fastapi.tiangolo.com/)
-* [Pydantic](https://docs.pydantic.dev/)
-* [Uvicorn](https://www.uvicorn.org/)
-
----
-
-## 👩‍💻 Author
-
-Developed with ❤️ using FastAPI.
-
-# Navigate to your project directory
-cd /Users/vaibhavee/project/TODO_fastapi
-
-# Open the database with sqlite3
-sqlite3 todo_multiuser.db
-
-# List all tables
-.tables
-
-# View all users
-SELECT * FROM users;
-
-# View users with formatted output
-.mode column
-.headers on
-SELECT id, username, email, is_active, is_admin, created_at FROM users;
-
-# Exit sqlite3
-.quit
-
+**TaskMaster** - Organize your life, together. 🎯
