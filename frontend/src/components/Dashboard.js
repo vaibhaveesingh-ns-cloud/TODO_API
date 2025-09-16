@@ -40,7 +40,7 @@ const Dashboard = () => {
   const [filter, setFilter] = useState('all'); // all, completed, pending
   const [sortBy, setSortBy] = useState('created'); // created, priority, dueDate
   const [isDarkMode, setIsDarkMode] = useState(false);
-  // const [editingTodo, setEditingTodo] = useState(null);
+  const [editingTodo, setEditingTodo] = useState(null);
   
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -94,15 +94,26 @@ const Dashboard = () => {
     }
   };
 
-  // const handleEditTodo = async (todoId, updatedData) => {
-  //   try {
-  //     const updatedTodo = await todosAPI.updateTodo(todoId, updatedData);
-  //     setTodos(todos.map(t => t.id === todoId ? updatedTodo : t));
-  //     setEditingTodo(null);
-  //   } catch (error) {
-  //     console.error('Failed to update todo:', error);
-  //   }
-  // };
+  const handleEditTodo = async (todoId, updatedData) => {
+    try {
+      const updatedTodo = await todosAPI.updateTodo(todoId, updatedData);
+      setTodos(todos.map(t => t.id === todoId ? updatedTodo : t));
+      setEditingTodo(null);
+    } catch (error) {
+      console.error('Failed to update todo:', error);
+    }
+  };
+
+  const startEditTodo = (todo) => {
+    setEditingTodo({
+      id: todo.id,
+      title: todo.title,
+      description: todo.description || '',
+      priority: todo.priority || 'medium',
+      category: todo.category || 'general',
+      dueDate: todo.dueDate || ''
+    });
+  };
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -511,6 +522,110 @@ const Dashboard = () => {
               </div>
             )}
 
+            {/* Edit Todo Form */}
+            {editingTodo && (
+              <div className="card mb-8 animate-slide-up">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Edit Task</h3>
+                  <button
+                    onClick={() => setEditingTodo(null)}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  handleEditTodo(editingTodo.id, {
+                    title: editingTodo.title,
+                    description: editingTodo.description,
+                    priority: editingTodo.priority,
+                    category: editingTodo.category,
+                    dueDate: editingTodo.dueDate
+                  });
+                }} className="space-y-4">
+                  <div className="form-group">
+                    <label className="form-label">Task Title</label>
+                    <input
+                      type="text"
+                      placeholder="What needs to be done?"
+                      value={editingTodo.title}
+                      onChange={(e) => setEditingTodo({...editingTodo, title: e.target.value})}
+                      className="form-input"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label className="form-label">Description</label>
+                    <textarea
+                      placeholder="Add more details (optional)"
+                      value={editingTodo.description}
+                      onChange={(e) => setEditingTodo({...editingTodo, description: e.target.value})}
+                      className="form-textarea"
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="form-group">
+                      <label className="form-label">Priority</label>
+                      <select
+                        value={editingTodo.priority}
+                        onChange={(e) => setEditingTodo({...editingTodo, priority: e.target.value})}
+                        className="form-input"
+                      >
+                        {priorities.map(priority => (
+                          <option key={priority.value} value={priority.value}>
+                            {priority.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Category</label>
+                      <select
+                        value={editingTodo.category}
+                        onChange={(e) => setEditingTodo({...editingTodo, category: e.target.value})}
+                        className="form-input"
+                      >
+                        {categories.map(category => (
+                          <option key={category.value} value={category.value}>
+                            {category.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Due Date</label>
+                      <input
+                        type="date"
+                        value={editingTodo.dueDate}
+                        onChange={(e) => setEditingTodo({...editingTodo, dueDate: e.target.value})}
+                        className="form-input"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-3 pt-4">
+                    <button type="submit" className="btn btn-primary">
+                      <Check className="h-4 w-4" />
+                      Update Task
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingTodo(null)}
+                      className="btn btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
             {/* Tasks List */}
             <div className="space-y-4">
               {filteredAndSortedTodos.length === 0 ? (
@@ -579,7 +694,7 @@ const Dashboard = () => {
                             
                             <div className="flex items-center gap-2">
                               <button
-                                onClick={() => {/* TODO: Implement edit functionality */}}
+                                onClick={() => startEditTodo(todo)}
                                 className="p-2 text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900 transition-colors"
                               >
                                 <Edit3 className="h-4 w-4" />

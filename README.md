@@ -92,7 +92,11 @@ cd TODO_fastapi
 
 3. **Start the backend server:**
    ```bash
-   uvicorn app.main:app --reload
+   # Option 1: Direct uvicorn command
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   
+   # Option 2: Use the local development script
+   python run_local.py
    ```
 
    The API will be available at `http://localhost:8000`

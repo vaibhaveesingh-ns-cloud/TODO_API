@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -35,7 +35,7 @@ api.interceptors.response.use(
 // Auth API
 export const authAPI = {
   register: async (userData) => {
-    const response = await api.post('/register', userData);
+    const response = await api.post('/auth/register', userData);
     return response.data;
   },
 
@@ -44,7 +44,7 @@ export const authAPI = {
     formData.append('username', username);
     formData.append('password', password);
     
-    const response = await api.post('/token', formData, {
+    const response = await api.post('/auth/token', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -53,7 +53,7 @@ export const authAPI = {
   },
 
   verifyEmail: async (token) => {
-    const response = await api.get(`/verify-email?token=${token}`);
+    const response = await api.get(`/auth/verify-email?token=${token}`);
     return response.data;
   },
 };

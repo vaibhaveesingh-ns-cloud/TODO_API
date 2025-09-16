@@ -44,7 +44,7 @@ class UserOut(BaseModel):
     is_admin: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
@@ -57,6 +57,11 @@ class TodoCreate(BaseModel):
     title: str = Field(..., min_length=3, max_length=100)
     description: Optional[str] = Field(None, max_length=250)
 
+class TodoUpdate(BaseModel):
+    title: Optional[str] = Field(None, min_length=3, max_length=100)
+    description: Optional[str] = Field(None, max_length=250)
+    completed: Optional[bool] = None
+
 class TodoOut(BaseModel):
     id: int
     title: str
@@ -65,4 +70,4 @@ class TodoOut(BaseModel):
     owner_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
