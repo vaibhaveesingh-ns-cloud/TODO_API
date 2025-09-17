@@ -10,6 +10,17 @@ from pathlib import Path
 
 def setup_local_env():
     """Set up environment variables for local development"""
+    # Load .env file if it exists
+    env_file = Path(".env")
+    if env_file.exists():
+        print("📁 Loading environment variables from .env file...")
+        with open(env_file) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    os.environ[key] = value
+    
     # Load local environment variables
     env_local = Path(".env.local")
     if env_local.exists():

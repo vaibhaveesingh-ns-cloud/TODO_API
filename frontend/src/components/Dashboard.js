@@ -254,26 +254,38 @@ const Dashboard = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleDarkMode}
-                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
-                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
-              <button className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                <Bell className="h-5 w-5" />
-              </button>
-              <button className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                <Settings className="h-5 w-5" />
-              </button>
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                <User className="h-4 w-4" />
+              
+              {user?.is_admin && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-700 dark:text-purple-300 rounded-xl transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Admin Panel</span>
+                </button>
+              )}
+              
+              <div className="flex items-center gap-2 text-sm">
+                <User className="w-4 h-4" />
                 <span className="font-medium">{user?.username}</span>
+                {user?.is_admin && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                    Admin
+                  </span>
+                )}
               </div>
+              
               <button
                 onClick={handleLogout}
-                className="btn btn-secondary"
+                className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-700 dark:text-red-300 rounded-xl transition-colors"
               >
-                <LogOut className="h-4 w-4" />
-                Logout
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
               </button>
             </div>
           </div>

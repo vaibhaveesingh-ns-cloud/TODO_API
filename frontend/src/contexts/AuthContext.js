@@ -21,7 +21,23 @@ export const AuthProvider = ({ children }) => {
     const userData = localStorage.getItem('user');
     
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      
+      // Refresh user data if token exists but user data might be outdated
+      if (token && !parsedUser.is_admin && !parsedUser.is_active) {
+        authAPI.getCurrentUser()
+          .then(freshUserData => {
+            localStorage.setItem('user', JSON.stringify(freshUserData));
+            setUser(freshUserData);
+          })
+          .catch(() => {
+            // Token might be expired, clear storage
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
+          });
+      }
     }
     setLoading(false);
   }, []);
@@ -34,8 +50,8 @@ export const AuthProvider = ({ children }) => {
       // Store token
       localStorage.setItem('token', access_token);
       
-      // Create user object (we'll need to decode token or make another API call for user info)
-      const userData = { username };
+      // Get user information
+      const userData = await authAPI.getCurrentUser();
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       

@@ -1,0 +1,21 @@
+# Email Configuration Example
+# Copy these environment variables to your system or create a .env file
+
+# Email Service Configuration
+EMAIL_SECRET_KEY=your-secret-key-here-change-me
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password-here
+FROM_EMAIL=your-email@gmail.com
+FRONTEND_URL=http://localhost:3000
+
+# For Gmail:
+# 1. Enable 2-factor authentication
+# 2. Generate an "App Password" (not your regular password)
+# 3. Use the app password as SMTP_PASSWORD
+
+# For other providers:
+# - Outlook: smtp.office365.com, port 587
+# - Yahoo: smtp.mail.yahoo.com, port 587
+# - Custom SMTP: Use your provider's settings

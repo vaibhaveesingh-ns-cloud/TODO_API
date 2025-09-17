@@ -56,6 +56,11 @@ export const authAPI = {
     const response = await api.get(`/auth/verify-email?token=${token}`);
     return response.data;
   },
+
+  getCurrentUser: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
 };
 
 // Todos API
@@ -88,8 +93,25 @@ export const todosAPI = {
 
 // Admin API
 export const adminAPI = {
+  // Dashboard stats
+  getDashboardStats: async () => {
+    const response = await api.get('/admin/dashboard/stats');
+    return response.data;
+  },
+
+  // Users management
   getUsers: async () => {
     const response = await api.get('/admin/users');
+    return response.data;
+  },
+
+  getUsersWithStats: async () => {
+    const response = await api.get('/admin/users/detailed');
+    return response.data;
+  },
+
+  getUserTodos: async (userId) => {
+    const response = await api.get(`/admin/users/${userId}/todos`);
     return response.data;
   },
 
@@ -98,8 +120,40 @@ export const adminAPI = {
     return response.data;
   },
 
+  demoteUser: async (userId) => {
+    const response = await api.post(`/admin/users/${userId}/demote`);
+    return response.data;
+  },
+
+  activateUser: async (userId) => {
+    const response = await api.post(`/admin/users/${userId}/activate`);
+    return response.data;
+  },
+
+  deactivateUser: async (userId) => {
+    const response = await api.post(`/admin/users/${userId}/deactivate`);
+    return response.data;
+  },
+
   deleteUser: async (userId) => {
     const response = await api.delete(`/admin/users/${userId}`);
+    return response.data;
+  },
+
+  // Todos management
+  getAllTodos: async (filters = {}) => {
+    const params = new URLSearchParams();
+    if (filters.user_id) params.append('user_id', filters.user_id);
+    if (filters.completed !== undefined) params.append('completed', filters.completed);
+    if (filters.limit) params.append('limit', filters.limit);
+    if (filters.offset) params.append('offset', filters.offset);
+    
+    const response = await api.get(`/admin/todos?${params.toString()}`);
+    return response.data;
+  },
+
+  deleteTodo: async (todoId) => {
+    const response = await api.delete(`/admin/todos/${todoId}`);
     return response.data;
   },
 };
