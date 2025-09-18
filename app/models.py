@@ -1,9 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime, func, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from .database import Base
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
+from datetime import datetime
 
 # SQLAlchemy ORM models
 class User(Base):
@@ -17,6 +18,8 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     todos = relationship("Todo", back_populates="owner", cascade="all, delete-orphan")
+    sessions = relationship("UserSession", back_populates="user", cascade="all, delete-orphan")
+    login_attempts = relationship("LoginAttempt", back_populates="user", cascade="all, delete-orphan")
 
 class Todo(Base):
     __tablename__ = "todos"
@@ -28,6 +31,32 @@ class Todo(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     owner = relationship("User", back_populates="todos")
+
+class UserSession(Base):
+    __tablename__ = "user_sessions"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    session_token = Column(String(255), unique=True, index=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_activity = Column(DateTime(timezone=True), server_default=func.now())
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    is_active = Column(Boolean, default=True)
+    ip_address = Column(String(45))  # IPv6 compatible
+    user_agent = Column(Text)
+    
+    user = relationship("User", back_populates="sessions")
+
+class LoginAttempt(Base):
+    __tablename__ = "login_attempts"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # Nullable for failed attempts
+    username = Column(String(255), nullable=False)  # Store attempted username
+    ip_address = Column(String(45), nullable=False)
+    success = Column(Boolean, default=False)
+    attempted_at = Column(DateTime(timezone=True), server_default=func.now())
+    user_agent = Column(Text)
+    
+    user = relationship("User", back_populates="login_attempts")
 
 
 # Pydantic schemas (request/response)
